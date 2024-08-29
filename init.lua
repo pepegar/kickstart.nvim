@@ -316,6 +316,7 @@ require('lazy').setup({
             n = { ['<c-d>'] = require('telescope.actions').delete_buffer },
             i = { ['<c-d>'] = require('telescope.actions').delete_buffer },
           },
+          path_display = { 'truncate' },
         },
         -- pickers = {}
         extensions = {
@@ -908,6 +909,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>gs', vim.cmd.Neogit)
     end,
   },
+  'renerocksai/jar-sdk-browser.nvim',
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
