@@ -269,7 +269,18 @@ require('lazy').setup({
         end,
       },
       { 'nvim-telescope/telescope-ui-select.nvim' },
-      { 'nvim-telescope/telescope-ghq.nvim' },
+      {
+        'nvim-telescope/telescope-ghq.nvim',
+        config = function()
+          require('telescope').load_extension 'ghq'
+        end,
+      },
+      {
+        'nvim-telescope/telescope-frecency.nvim',
+        config = function()
+          require('telescope').load_extension 'frecency'
+        end,
+      },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
@@ -317,7 +328,6 @@ require('lazy').setup({
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
-      pcall(require('telescope').load_extension, 'ghq')
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
@@ -330,7 +340,9 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      vim.keymap.set('n', '<leader>sp', ':Telescope ghq<CR>', { desc = '[S]earch [P]rojects. Telescope ghq' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<M-x>', builtin.commands, { desc = 'Meta-X' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -892,7 +904,7 @@ require('lazy').setup({
       'nvim-telescope/telescope.nvim', -- optional
     },
     config = function()
-      require('neogit').setup()
+      require('neogit').setup {}
       vim.keymap.set('n', '<leader>gs', vim.cmd.Neogit)
     end,
   },
