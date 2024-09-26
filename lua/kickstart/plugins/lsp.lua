@@ -135,6 +135,27 @@ return {
       end,
     })
 
+    local lspconfig = require 'lspconfig'
+
+    -- List of all supported file types based on our tree-sitter grammars
+    local supported_filetypes = {
+      'rust',
+      'python',
+      'javascript',
+      'typescript',
+      'cpp',
+      'c',
+      'go',
+      'java',
+      'ruby',
+      'php',
+      'html',
+      'css',
+      'bash',
+      'lua',
+      'swift',
+    }
+
     -- LSP servers and clients are able to communicate to each other what features they support.
     --  By default, Neovim doesn't support everything that is in the LSP specification.
     --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.

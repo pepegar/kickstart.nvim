@@ -76,6 +76,7 @@ vim.opt.relativenumber = true
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
+vim.keymap.set('n', '<leader>w', ':set wrap!<CR>', { noremap = true, silent = true })
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
@@ -132,6 +133,8 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   end
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
+-- You can configure highlights by doing something like:
+vim.cmd.hi 'Comment gui=none'
 
 -- [[ Configure and install plugins ]]
 --
@@ -147,7 +150,6 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -256,23 +258,7 @@ require('lazy').setup({
   },
   { 'Bilal2453/luvit-meta', lazy = true },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    init = function()
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
-
-      -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
-    end,
-  },
+  { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
@@ -342,6 +328,35 @@ require('lazy').setup({
       }
     end,
   },
+  {
+    'stevearc/oil.nvim',
+    opts = {},
+    dependencies = {
+      { 'echasnovski/mini.icons', opts = {} },
+    },
+    config = function()
+      require('oil').setup()
+      vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory with oil.nvim' })
+    end,
+  },
+
+  'preservim/nerdcommenter',
+
+  {
+    'NeogitOrg/neogit',
+    dependencies = {
+      'nvim-lua/plenary.nvim', -- required
+      'sindrets/diffview.nvim', -- optional - Diff integration
+      'nvim-telescope/telescope.nvim', -- optional
+    },
+    config = function()
+      require('neogit').setup {}
+      vim.keymap.set('n', '<leader>gs', vim.cmd.Neogit)
+    end,
+  },
+  {
+    'github/copilot.vim',
+  },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
@@ -369,60 +384,6 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
-  {
-    'stevearc/oil.nvim',
-    opts = {},
-    dependencies = {
-      { 'echasnovski/mini.icons', opts = {} },
-    },
-    config = function()
-      require('oil').setup {
-        view_options = {
-          show_hidden = true,
-        },
-      }
-      vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory with oil.nvim' })
-    end,
-  },
-
-  'preservim/nerdcommenter',
-
-  {
-    'NeogitOrg/neogit',
-    dependencies = {
-      'nvim-lua/plenary.nvim', -- required
-      'sindrets/diffview.nvim', -- optional - Diff integration
-      'nvim-telescope/telescope.nvim', -- optional
-    },
-    config = function()
-      require('neogit').setup {}
-      vim.keymap.set('n', '<leader>gs', vim.cmd.Neogit)
-    end,
-  },
-
-  {
-    'davidmh/mdx.nvim',
-    config = true,
-    dependencies = { 'nvim-treesitter/nvim-treesitter' },
-  },
-  {
-    'chenxin-yan/footnote.nvim',
-    ft = 'markdown',
-    config = function()
-      require('footnote').setup {
-        keys = {
-          new_footnote = '<C-f>',
-          organize_footnotes = '',
-          next_footnote = ']f',
-          prev_footnote = '[f',
-        },
-        organize_on_new = false,
-      }
-    end,
-  },
-  { 'github/copilot.vim' },
-  { 'terryma/vim-multiple-cursors' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
