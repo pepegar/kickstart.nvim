@@ -1,3 +1,25 @@
+-- Function to read the colorscheme from file
+local function read_colorscheme()
+  local file = io.open(os.getenv 'HOME' .. '/.current-colorscheme', 'r')
+  if file then
+    local content = file:read '*all'
+    file:close()
+    return content:gsub('^%s*(.-)%s*$', '%1') -- Trim whitespace
+  end
+  return 'default' -- Fallback colorscheme
+end
+
+-- Function to set the colorscheme
+local function set_colorscheme()
+  local colorscheme = read_colorscheme()
+  vim.cmd('colorscheme ' .. colorscheme)
+end
+
+vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
+  pattern = { '~/.current-colorscheme' },
+  callback = set_colorscheme,
+})
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -258,7 +280,22 @@ require('lazy').setup({
   },
   { 'Bilal2453/luvit-meta', lazy = true },
 
-  { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
+  {
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    priority = 1000,
+    config = function()
+      require('catppuccin').setup {
+        integrations = {
+          cmp = true,
+          treesitter = true,
+          neogit = true,
+          gitsigns = true,
+          telescope = true,
+        },
+      }
+    end,
+  },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
@@ -356,6 +393,23 @@ require('lazy').setup({
   },
   {
     'github/copilot.vim',
+  },
+  {
+    'f-person/auto-dark-mode.nvim',
+    dependencies = {
+      'catppuccin/nvim',
+    },
+    opts = {
+      update_interval = 1000,
+      set_dark_mode = function()
+        vim.api.nvim_set_option_value('background', 'dark', {})
+        vim.cmd 'colorscheme catppucin'
+      end,
+      set_light_mode = function()
+        vim.api.nvim_set_option_value('background', 'light', {})
+        vim.cmd 'colorscheme catppucin-latte'
+      end,
+    },
   },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
