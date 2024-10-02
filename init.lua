@@ -377,7 +377,11 @@ require('lazy').setup({
       { 'echasnovski/mini.icons', opts = {} },
     },
     config = function()
-      require('oil').setup()
+      require('oil').setup {
+        view_options = {
+          show_hidden = true,
+        },
+      }
       vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory with oil.nvim' })
     end,
   },
@@ -417,6 +421,8 @@ require('lazy').setup({
       }
     end,
   },
+  { 'github/copilot.vim' },
+  { 'terryma/vim-multiple-cursors' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
