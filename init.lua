@@ -1,25 +1,3 @@
--- Function to read the colorscheme from file
-local function read_colorscheme()
-  local file = io.open(os.getenv 'HOME' .. '/.current-colorscheme', 'r')
-  if file then
-    local content = file:read '*all'
-    file:close()
-    return content:gsub('^%s*(.-)%s*$', '%1') -- Trim whitespace
-  end
-  return 'default' -- Fallback colorscheme
-end
-
--- Function to set the colorscheme
-local function set_colorscheme()
-  local colorscheme = read_colorscheme()
-  vim.cmd('colorscheme ' .. colorscheme)
-end
-
-vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
-  pattern = { '~/.current-colorscheme' },
-  callback = set_colorscheme,
-})
-
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -282,18 +260,61 @@ require('lazy').setup({
 
   {
     'catppuccin/nvim',
+    lazy = false,
     name = 'catppuccin',
     priority = 1000,
     config = function()
       require('catppuccin').setup {
+        flavour = 'auto', -- latte, frappe, macchiato, mocha
+        background = { -- :h background
+          light = 'latte',
+          dark = 'mocha',
+        },
+        transparent_background = false, -- disables setting the background color.
+        show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
+        term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
+        dim_inactive = {
+          enabled = false, -- dims the background color of inactive window
+          shade = 'dark',
+          percentage = 0.15, -- percentage of the shade to apply to the inactive window
+        },
+        no_italic = false, -- Force no italic
+        no_bold = false, -- Force no bold
+        no_underline = false, -- Force no underline
+        styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
+          comments = { 'italic' }, -- Change the style of comments
+          conditionals = { 'italic' },
+          loops = {},
+          functions = {},
+          keywords = {},
+          strings = {},
+          variables = {},
+          numbers = {},
+          booleans = {},
+          properties = {},
+          types = {},
+          operators = {},
+          -- miscs = {}, -- Uncomment to turn off hard-coded styles
+        },
+        color_overrides = {},
+        custom_highlights = {},
+        default_integrations = true,
         integrations = {
           cmp = true,
-          treesitter = true,
-          neogit = true,
           gitsigns = true,
-          telescope = true,
+          nvimtree = true,
+          treesitter = true,
+          notify = false,
+          mini = {
+            enabled = true,
+            indentscope_color = '',
+          },
+          -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
         },
       }
+
+      -- setup must be called before loading
+      vim.cmd.colorscheme 'catppuccin'
     end,
   },
 
@@ -393,23 +414,6 @@ require('lazy').setup({
   },
   {
     'github/copilot.vim',
-  },
-  {
-    'f-person/auto-dark-mode.nvim',
-    dependencies = {
-      'catppuccin/nvim',
-    },
-    opts = {
-      update_interval = 1000,
-      set_dark_mode = function()
-        vim.api.nvim_set_option_value('background', 'dark', {})
-        vim.cmd 'colorscheme catppucin'
-      end,
-      set_light_mode = function()
-        vim.api.nvim_set_option_value('background', 'light', {})
-        vim.cmd 'colorscheme catppucin-latte'
-      end,
-    },
   },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
