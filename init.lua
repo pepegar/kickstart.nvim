@@ -461,6 +461,13 @@ require('lazy').setup({
   },
   {
     'folke/twilight.nvim',
+    keys = {
+      {
+        '<leader>tt',
+        '<cmd>Twilight<cr>',
+        desc = 'Toggle Twilight',
+      },
+    },
     opts = {
       dimming = {
         alpha = 0.25, -- amount of dimming
