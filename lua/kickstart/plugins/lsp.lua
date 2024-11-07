@@ -145,6 +145,7 @@ return {
       'typescript',
       'cpp',
       'c',
+      'kotlin',
       'go',
       'java',
       'ruby',
@@ -176,6 +177,7 @@ return {
       -- clangd = {},
       -- gopls = {},
       pyright = {},
+      eslint = {},
       rust_analyzer = {},
       nil_ls = {},
       -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -206,7 +208,7 @@ return {
     -- Ensure the servers and tools above are installed
     --  To check the current status of installed tools and/or manually install
     --  other tools, you can run
-    --    :Mason
+    --    :Masonlsp
     --
     --  You can press `g?` for help in this menu.
     require('mason').setup()
@@ -250,5 +252,15 @@ return {
     end
 
     lspconfig.ideals.setup {}
+    lspconfig.eslint.setup {
+      filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
+      settings = {
+        workingDirectory = {
+          mode = 'auto',
+        },
+        format = { enable = true },
+        lint = { enable = true },
+      },
+    }
   end,
 }
