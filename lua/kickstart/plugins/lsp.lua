@@ -164,6 +164,7 @@ return {
       --
       -- But for many setups, the LSP (`tsserver`) will work just fine
       tsserver = {},
+      zls = {},
       --
 
       lua_ls = {
@@ -210,24 +211,5 @@ return {
         end,
       },
     }
-
-    local configs = require 'lspconfig.configs'
-    local lspconfig = require 'lspconfig'
-
-    if not configs.ideals then
-      configs.ideals = {
-        default_config = {
-          --cmd = { "idea", "lsp-server" },
-          cmd = { 'nc', 'localhost', '8989' },
-          filetypes = { 'kotlin', 'java' },
-          root_dir = function(fname)
-            return lspconfig.util.find_git_ancestor(fname)
-          end,
-          settings = {},
-        },
-      }
-    end
-
-    lspconfig.ideals.setup {}
   end,
 }

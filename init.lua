@@ -359,6 +359,7 @@ require('lazy').setup({
   require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns',
   require 'kickstart.plugins.lsp',
+  require 'kickstart.plugins.trouble',
   require 'kickstart.plugins.telescope',
   require 'kickstart.plugins.conform',
   require 'kickstart.plugins.completion',
@@ -421,7 +422,6 @@ require('lazy').setup({
       }
     end,
   },
-  { 'github/copilot.vim' },
   { 'terryma/vim-multiple-cursors' },
 }, {
   ui = {
